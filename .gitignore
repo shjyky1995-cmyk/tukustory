@@ -1,0 +1,33 @@
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# NuGet
+*.nupkg
+packages/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.pdb
+*.dll
+!lib/**/*.dll
+
+# Local user data (never commit real library data, PDFs, or credentials)
+Library/
+*.db
+*.db-wal
+*.db-shm
+*.pdf
+!tests/fixtures/**/*.pdf
+
+# Secrets
+.env
+*.pfx
+*.snk
+appsettings.*.local.json
