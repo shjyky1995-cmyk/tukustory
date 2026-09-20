@@ -6,7 +6,7 @@ namespace Tuku.Domain.Search
 
     public sealed class PracticeSearchFields
     {
-        private PracticeSearchFields(
+        internal PracticeSearchFields(
             string nameNormalized,
             string codeNormalized,
             string bodyNormalized,

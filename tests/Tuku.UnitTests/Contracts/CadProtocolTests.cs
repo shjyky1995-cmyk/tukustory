@@ -6,6 +6,17 @@ namespace Tuku.UnitTests.Contracts
 
     public class CadProtocolTests
     {
+        private static T MustDeserialize<T>(string json)
+        {
+            var value = JsonConvert.DeserializeObject<T>(json);
+            if (value == null)
+            {
+                throw new System.InvalidOperationException("反序列化结果为空");
+            }
+
+            return value;
+        }
+
         [Fact]
         public void Envelope_RoundTrips_WithChineseAndSpecialCharacters()
         {
@@ -33,12 +44,18 @@ namespace Tuku.UnitTests.Contracts
 
             var message = ProtocolMessage.Create(CadProtocol.MessageInsertPractice, "req-1", request);
             var json = JsonConvert.SerializeObject(message);
-            var restored = JsonConvert.DeserializeObject<ProtocolMessage>(json);
+            var restored = MustDeserialize<ProtocolMessage>(json);
 
             Assert.Equal(CadProtocol.CurrentVersion, restored.ProtocolVersion);
             Assert.Equal("req-1", restored.RequestId);
             Assert.Equal(CadProtocol.MessageInsertPractice, restored.Type);
             var payload = restored.ReadPayload<CadInsertPracticeRequest>();
+            if (payload == null)
+            {
+                Assert.Fail("payload 反序列化不应为空");
+                return;
+            }
+
             Assert.Equal("楼地面做法 ①", payload.Items[0].Text);
             Assert.Equal("20 厚 1:2 水泥砂浆\n\\P 第二行", payload.Items[2].Text);
             Assert.Equal(3, payload.Items.Count);
@@ -58,8 +75,14 @@ namespace Tuku.UnitTests.Contracts
         {
             var message = ProtocolMessage.CreateEmpty(CadProtocol.MessageGetRequestStatus, "req-2");
             var json = JsonConvert.SerializeObject(message);
-            var restored = JsonConvert.DeserializeObject<ProtocolMessage>(json);
+            var restored = MustDeserialize<ProtocolMessage>(json);
             var payload = restored.ReadPayload<CadGetRequestStatus>();
+            if (payload == null)
+            {
+                Assert.Fail("payload 反序列化不应为空");
+                return;
+            }
+
             Assert.Null(payload.RequestId);
         }
 
@@ -79,7 +102,7 @@ namespace Tuku.UnitTests.Contracts
             {
                 var status = new CadInsertStatus { RequestId = "r", Phase = phase, Message = "消息", CreatedObjectCount = 4 };
                 var json = JsonConvert.SerializeObject(status);
-                var restored = JsonConvert.DeserializeObject<CadInsertStatus>(json);
+                var restored = MustDeserialize<CadInsertStatus>(json);
                 Assert.Equal(phase, restored.Phase);
                 Assert.Equal(4, restored.CreatedObjectCount);
             }
