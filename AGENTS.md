@@ -107,12 +107,12 @@
 
 ## 9. 当前交接记录
 
-2026-09-20：用户明确要求开始开发，进入实现阶段。已完成 Git 仓库与开发日志制度、阶段 0 环境核实、解决方案骨架、Domain、Contracts、Application 边界与用例服务、Infrastructure（SQLite 迁移与仓储）。
+2026-09-20：用户明确要求开始开发，进入实现阶段。已完成 Git 仓库与开发日志制度、阶段 0 环境核实、解决方案骨架、Domain、Contracts、Application 边界与用例服务、Infrastructure（SQLite 迁移与仓储）、Desktop（WPF 三栏界面闭环）。
 
-已验证：全解决方案构建 0 错误 0 警告；单元测试 37/37；net48 真实 SQLite 集成测试 10/10（覆盖搜索、编号优先排序、修订冲突、恢复历史、编辑复位未核对）。
+已验证：全解决方案构建 0 错误 0 警告；单元测试 37/37；net48 真实 SQLite 集成测试 10/10；桌面程序 `Tuku.Desktop.exe --smoke` 真实启动退出码 0，资料库 17 表与默认分类种子（中文）校验通过。
 
-未验证：无 AutoCAD 运行环境（阶段 1 与 A07/A08 无法执行）；无真实图集样本与云凭据（阶段 3 识别评测无法执行）；桌面 UI 未开始。
+未验证：无 AutoCAD 运行环境（阶段 1 CAD 最小验证与 A07/A08 无法执行）；无真实图集样本与云凭据（阶段 3 导入识别与 95% 指标评测无法执行）；识别导入、任务恢复、资料包交换、安装分发的代码未开始。
 
-下一步：Tuku.Desktop WPF 三栏界面闭环（本地资料闭环阶段 2），之后请用户提供 CAD 环境与代表图集。
+下一步（按第 5 节）：导入识别流水线（IPdfSource 渲染/文本、IRecognitionProvider、IPracticeExtractor、任务持久化与缓存），需用户提供代表图集 PDF 与可测试 CAD 环境。
 
 开发日志见 docs/devlog/，每个节点提交 Git 并附摘要；技术决策见 docs/decisions/。
