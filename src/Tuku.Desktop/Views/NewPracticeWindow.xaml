@@ -1,0 +1,58 @@
+<Window x:Class="Tuku.Desktop.Views.NewPracticeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="新建做法" Height="520" Width="520"
+        WindowStartupLocation="CenterOwner"
+        FocusManager.FocusedElement="{Binding ElementName=NameBox}">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="名称*" Margin="0,0,8,8" VerticalAlignment="Center" />
+        <TextBox x:Name="NameBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8" Text="{Binding PracticeName, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="编号" Margin="0,0,8,8" VerticalAlignment="Center" />
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="主部位*" Margin="0,0,8,8" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,8"
+                  ItemsSource="{Binding Parts}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Id"
+                  SelectedValue="{Binding MainPartId}" />
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="标签" Margin="0,0,8,8" VerticalAlignment="Center" />
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,8" Text="{Binding TagsText, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="备注" Margin="0,0,8,8" VerticalAlignment="Center" />
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="引用说明" Margin="0,0,8,8" VerticalAlignment="Center" />
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,0,0,8" Text="{Binding ReferenceNote, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="层次*" Margin="0,0,8,8" VerticalAlignment="Top" />
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="0,0,0,8"
+                 AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                 Text="{Binding LayersText, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="7" Grid.ColumnSpan="2" Text="{Binding ErrorText}" Foreground="DarkRed" TextWrapping="Wrap" Margin="0,0,0,8" />
+
+        <StackPanel Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="保存" Width="80" Margin="0,0,8,0" IsDefault="True" Click="OnSave" />
+            <Button Content="取消" Width="80" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

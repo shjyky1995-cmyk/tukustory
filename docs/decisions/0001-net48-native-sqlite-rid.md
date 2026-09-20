@@ -2,7 +2,8 @@
 
 - 日期：2026-09-20
 - 状态：已采用并经构建与测试验证
-- 关联节点：devlog 2026-09-20 节点 009
+- 关联节点：devlog 2026-09-20 节点 009、011
+- 适用范围：所有 net48 项目（Tuku.Infrastructure、Tuku.IntegrationTests、Tuku.Desktop）
 
 ## 背景
 

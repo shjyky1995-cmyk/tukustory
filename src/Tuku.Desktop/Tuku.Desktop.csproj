@@ -2,12 +2,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tuku.Application\Tuku.Application.csproj" />
+    <ProjectReference Include="..\Tuku.Infrastructure\Tuku.Infrastructure.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
