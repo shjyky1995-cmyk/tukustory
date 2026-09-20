@@ -31,3 +31,7 @@ Library/
 *.pfx
 *.snk
 appsettings.*.local.json
+
+# 本地分发资料（安装包与发布版体积大，仅作 U 盘拷贝，不进 Git）
+必备资料/*.exe
+必备资料/Tuku.Desktop-发布版/
