@@ -49,18 +49,18 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void CreateThenQueryAndDetail_RoundTrips()
         {
-            var id = repository.Create(
-                Guid.NewGuid(),
-                null,
-                "楼地面做法一",
-                "D-01",
-                partFloor,
-                "备注文字",
-                "参见 12J2",
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                new[] { "防水", "卫生间" },
-                "手工录入");
+            var id = repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "楼地面做法一",
+            Code = "D-01",
+            MainPartId = partFloor,
+            Notes = "备注文字",
+            ReferenceNote = "参见 12J2",
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = new[] { "防水", "卫生间" }
+        });
 
             var query = new PracticeQuery { Keywords = "楼地面", Page = 1, PageSize = 10 };
             var result = repository.Query(query);
@@ -87,18 +87,18 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Search_NormalizesFullWidthCodeAndCase()
         {
-            repository.Create(
-                Guid.NewGuid(),
-                null,
-                "做法甲",
-                "L15J-104",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "素土夯实", CurrentText = "素土夯实" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入");
+            repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "做法甲",
+            Code = "L15J-104",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "素土夯实", CurrentText = "素土夯实" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = Enumerable.Empty<string>().ToList()
+        });
 
             var result = repository.Query(new PracticeQuery { Keywords = "ｌ１５ｊ－１０４", Page = 1, PageSize = 10 });
 
@@ -109,30 +109,30 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Search_ExactCodeRanksFirst()
         {
-            repository.Create(
-                Guid.NewGuid(),
-                null,
-                "普通做法",
-                "X-99",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "找平层，参见 d-01 图集", CurrentText = "找平层，参见 d-01 图集" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入");
-            repository.Create(
-                Guid.NewGuid(),
-                null,
-                "编号做法",
-                "D-01",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "结合层", CurrentText = "结合层" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入");
+            repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "普通做法",
+            Code = "X-99",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "找平层，参见 d-01 图集", CurrentText = "找平层，参见 d-01 图集" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = Enumerable.Empty<string>().ToList()
+        });
+            repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "编号做法",
+            Code = "D-01",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "结合层", CurrentText = "结合层" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = Enumerable.Empty<string>().ToList()
+        });
 
             var result = repository.Query(new PracticeQuery { Keywords = "d-01", Page = 1, PageSize = 10 });
 
@@ -144,30 +144,30 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Search_PartFilterAndMultiTerm()
         {
-            repository.Create(
-                Guid.NewGuid(),
-                null,
-                "楼地面做法一",
-                "D-01",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                new[] { "防水" },
-                "录入");
-            repository.Create(
-                Guid.NewGuid(),
-                null,
-                "内墙做法一",
-                "D-02",
-                partInnerWall,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                new[] { "防水" },
-                "录入");
+            repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "楼地面做法一",
+            Code = "D-01",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = new[] { "防水" }
+        });
+            repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "内墙做法一",
+            Code = "D-02",
+            MainPartId = partInnerWall,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = new[] { "防水" }
+        });
 
             var floorOnly = repository.Query(new PracticeQuery { PartId = partFloor, Page = 1, PageSize = 10 });
             Assert.Single(floorOnly.Items);
@@ -183,18 +183,18 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Save_WithStaleRevision_ReturnsConflict_AndKeepsContent()
         {
-            var id = repository.Create(
-                Guid.NewGuid(),
-                null,
-                "楼地面做法一",
-                "D-01",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入");
+            var id = repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "楼地面做法一",
+            Code = "D-01",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = Enumerable.Empty<string>().ToList()
+        });
 
             var conflict = repository.Save(new PracticeEditCommand
             {
@@ -215,18 +215,18 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Save_ThenRestore_CreatesNewRevisions()
         {
-            var id = repository.Create(
-                Guid.NewGuid(),
-                null,
-                "楼地面做法一",
-                "D-01",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入");
+            var id = repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "楼地面做法一",
+            Code = "D-01",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = Enumerable.Empty<string>().ToList()
+        });
 
             var saved = repository.Save(new PracticeEditCommand
             {
@@ -256,18 +256,18 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Edit_ResetsVerifiedStatus()
         {
-            var id = repository.Create(
-                Guid.NewGuid(),
-                null,
-                "楼地面做法一",
-                "D-01",
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入");
+            var id = repository.CreatePractice(new CreatePracticeCommand
+        {
+            AtlasId = null,
+            Name = "楼地面做法一",
+            Code = "D-01",
+            MainPartId = partFloor,
+            Notes = null,
+            ReferenceNote = null,
+            Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "20 厚水泥砂浆", CurrentText = "20 厚水泥砂浆" } },
+            Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList().ToList(),
+            TagNames = Enumerable.Empty<string>().ToList()
+        });
 
             Assert.Equal(PracticeSaveStatus.Saved, repository.SetVerified(id, true).Status);
             Assert.True(repository.GetDetail(id).IsVerified);
@@ -289,19 +289,18 @@ namespace Tuku.IntegrationTests.Repositories
         [Fact]
         public void Validation_FailsWithoutInsertableLayer()
         {
-            var id = Guid.NewGuid();
-            var exception = Assert.Throws<InvalidOperationException>(() => repository.Create(
-                id,
-                null,
-                "空做法",
-                null,
-                partFloor,
-                null,
-                null,
-                new[] { new PracticeEditCommand.LayerEdit { OriginalText = "有原文", CurrentText = "  " } },
-                Enumerable.Empty<PracticeEditCommand.SourceEdit>(),
-                Enumerable.Empty<string>(),
-                "录入"));
+            var exception = Assert.Throws<InvalidOperationException>(() => repository.CreatePractice(new CreatePracticeCommand
+            {
+                AtlasId = null,
+                Name = "空做法",
+                Code = null,
+                MainPartId = partFloor,
+                Notes = null,
+                ReferenceNote = null,
+                Layers = new[] { new PracticeEditCommand.LayerEdit { OriginalText = "有原文", CurrentText = "  " } },
+                Sources = Enumerable.Empty<PracticeEditCommand.SourceEdit>().ToList(),
+                TagNames = Enumerable.Empty<string>().ToList()
+            }));
 
             Assert.Contains("至少", exception.Message);
         }

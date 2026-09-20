@@ -10,9 +10,13 @@ namespace Tuku.Application.Abstractions
 
     public interface IPracticeRepository
     {
+        Guid CreatePractice(CreatePracticeCommand command);
+
         PagedResult<PracticeListItem> Query(PracticeQuery query);
 
         PracticeDetail GetDetail(Guid practiceId);
+
+        RevisionSnapshotDto GetRevisionSnapshot(Guid practiceId, int revisionNumber);
 
         IReadOnlyList<RevisionSummary> GetRevisions(Guid practiceId);
 

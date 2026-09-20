@@ -298,33 +298,28 @@ namespace Tuku.Infrastructure.Repositories
             }
         }
 
-        public Guid Create(
-            Guid practiceId,
-            Guid? atlasId,
-            string name,
-            string code,
-            Guid mainPartId,
-            string notes,
-            string referenceNote,
-            IEnumerable<PracticeEditCommand.LayerEdit> layers,
-            IEnumerable<PracticeEditCommand.SourceEdit> sources,
-            IEnumerable<string> tagNames,
-            string reason)
+        public Guid CreatePractice(CreatePracticeCommand command)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
+            var practiceId = Guid.NewGuid();
             using (var connection = connectionFactory.CreateOpenConnection())
             using (var transaction = connection.BeginTransaction())
             {
                 var result = Practice.TryCreate(
                     practiceId,
-                    atlasId,
-                    name,
-                    code,
-                    mainPartId,
-                    notes,
-                    referenceNote,
-                    MapLayers(layers),
-                    MapSources(sources),
-                    ResolveTagIds(connection, transaction, tagNames),
+                    command.AtlasId,
+                    command.Name,
+                    command.Code,
+                    command.MainPartId,
+                    command.Notes,
+                    command.ReferenceNote,
+                    MapLayers(command.Layers),
+                    MapSources(command.Sources),
+                    ResolveTagIds(connection, transaction, command.TagNames),
                     DateTime.UtcNow,
                     out var practice);
                 if (!result.IsValid)
@@ -332,9 +327,50 @@ namespace Tuku.Infrastructure.Repositories
                     throw new InvalidOperationException(string.Join("；", result.Errors));
                 }
 
-                PersistPractice(connection, transaction, practice, reason);
+                PersistPractice(connection, transaction, practice, "新建做法");
                 transaction.Commit();
                 return practiceId;
+            }
+        }
+
+        public RevisionSnapshotDto GetRevisionSnapshot(Guid practiceId, int revisionNumber)
+        {
+            using (var connection = connectionFactory.CreateOpenConnection())
+            {
+                string json = null;
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        "SELECT snapshot_json FROM practice_revisions WHERE practice_id = $id AND revision_no = $revision";
+                    command.Parameters.AddWithValue("$id", practiceId.ToString());
+                    command.Parameters.AddWithValue("$revision", revisionNumber);
+                    json = command.ExecuteScalar() as string;
+                }
+
+                if (string.IsNullOrEmpty(json))
+                {
+                    return null;
+                }
+
+                var snapshot = JsonConvert.DeserializeObject<PracticeSnapshot>(json);
+                return new RevisionSnapshotDto
+                {
+                    RevisionNumber = revisionNumber,
+                    Name = snapshot.Name,
+                    Code = snapshot.Code,
+                    Notes = snapshot.Notes,
+                    ReferenceNote = snapshot.ReferenceNote,
+                    Layers = snapshot.Layers
+                        .Select((l, index) => new LayerDto
+                        {
+                            Id = l.LayerId,
+                            Order = index + 1,
+                            OriginalText = l.OriginalText,
+                            CurrentText = l.CurrentText
+                        })
+                        .ToList(),
+                    TagIds = snapshot.TagIds
+                };
             }
         }
 

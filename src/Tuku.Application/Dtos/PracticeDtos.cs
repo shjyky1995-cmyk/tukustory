@@ -194,6 +194,44 @@ namespace Tuku.Application.Dtos
         }
     }
 
+    public sealed class RevisionSnapshotDto
+    {
+        public int RevisionNumber { get; set; }
+
+        public string Name { get; set; }
+
+        public string Code { get; set; }
+
+        public string Notes { get; set; }
+
+        public string ReferenceNote { get; set; }
+
+        public IReadOnlyList<LayerDto> Layers { get; set; }
+
+        public IReadOnlyList<Guid> TagIds { get; set; }
+    }
+
+    public sealed class CreatePracticeCommand
+    {
+        public Guid? AtlasId { get; set; }
+
+        public string Name { get; set; }
+
+        public string Code { get; set; }
+
+        public Guid MainPartId { get; set; }
+
+        public string Notes { get; set; }
+
+        public string ReferenceNote { get; set; }
+
+        public IReadOnlyList<PracticeEditCommand.LayerEdit> Layers { get; set; }
+
+        public IReadOnlyList<PracticeEditCommand.SourceEdit> Sources { get; set; }
+
+        public IReadOnlyList<string> TagNames { get; set; }
+    }
+
     public enum PracticeSaveStatus
     {
         Saved = 0,
