@@ -116,3 +116,5 @@
 下一步（按第 5 节）：导入识别流水线（IPdfSource 渲染/文本、IRecognitionProvider、IPracticeExtractor、任务持久化与缓存），需用户提供代表图集 PDF 与可测试 CAD 环境。
 
 开发日志见 docs/devlog/，每个节点提交 Git 并附摘要；技术决策见 docs/decisions/。
+
+2026-09-21：代码已推送到用户 GitHub 仓库 https://github.com/shjyky1995-cmyk/tukustory （节点 013）。家用网络对 github.com 按 SNI 重置，推送经 GitHub 直连 IP 完成；公司网络一般可直接 clone。
