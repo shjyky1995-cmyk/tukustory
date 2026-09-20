@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -24,6 +25,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tuku.Infrastructure\Tuku.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Tuku.Application\Tuku.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

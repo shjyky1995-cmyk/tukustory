@@ -1,5 +1,7 @@
 namespace Tuku.Domain.ValueObjects
 {
+    using Newtonsoft.Json;
+
     public enum RegionSource
     {
         Unknown = 0,
@@ -9,6 +11,7 @@ namespace Tuku.Domain.ValueObjects
 
     public sealed class PageRegion
     {
+        [JsonConstructor]
         public PageRegion(double x, double y, double width, double height, RegionSource source, bool isReliable)
         {
             X = x;

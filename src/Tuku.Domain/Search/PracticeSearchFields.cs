@@ -46,6 +46,29 @@ namespace Tuku.Domain.Search
 
         public string MainPartNameNormalized { get; private set; }
 
+        public static PracticeSearchFields FromStoredFields(
+            string nameNormalized,
+            string codeNormalized,
+            string bodyNormalized,
+            string notesNormalized,
+            string referenceNormalized,
+            IReadOnlyList<string> tagNamesNormalized,
+            string atlasNameNormalized,
+            string atlasCodeNormalized,
+            string mainPartNameNormalized)
+        {
+            return new PracticeSearchFields(
+                nameNormalized,
+                codeNormalized,
+                bodyNormalized,
+                notesNormalized,
+                referenceNormalized,
+                tagNamesNormalized,
+                atlasNameNormalized,
+                atlasCodeNormalized,
+                mainPartNameNormalized);
+        }
+
         public static PracticeSearchFields FromPractice(
             Practice practice,
             string atlasName,

@@ -2,9 +2,11 @@ namespace Tuku.Domain.Entities
 {
     using System;
     using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     public sealed class LayerSnapshot
     {
+        [JsonConstructor]
         public LayerSnapshot(Guid layerId, string originalText, string currentText)
         {
             LayerId = layerId;
@@ -21,6 +23,7 @@ namespace Tuku.Domain.Entities
 
     public sealed class SourceSnapshot
     {
+        [JsonConstructor]
         public SourceSnapshot(Guid sourceId, Guid pageId, ValueObjects.PageRegion region)
         {
             SourceId = sourceId;
@@ -37,6 +40,7 @@ namespace Tuku.Domain.Entities
 
     public sealed class PracticeSnapshot
     {
+        [JsonConstructor]
         public PracticeSnapshot(
             string name,
             string code,

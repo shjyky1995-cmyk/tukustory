@@ -346,6 +346,150 @@ namespace Tuku.Domain.Entities
             }
         }
 
+        public static Practice Load(PracticeState state)
+        {
+            if (state == null)
+            {
+                throw new ArgumentNullException("state");
+            }
+
+            var entity = new Practice
+            {
+                Id = state.Id,
+                AtlasId = state.AtlasId,
+                Name = state.Name,
+                Code = state.Code,
+                MainPartId = state.MainPartId,
+                Notes = state.Notes,
+                ReferenceNote = state.ReferenceNote,
+                IsVerified = state.IsVerified,
+                IsArchived = state.IsArchived,
+                CurrentRevision = state.CurrentRevision,
+                CreatedUtc = state.CreatedUtc,
+                UpdatedUtc = state.UpdatedUtc
+            };
+
+            var order = 1;
+            foreach (var layer in state.Layers)
+            {
+                entity.layers.Add(PracticeLayer.Create(layer.LayerId, entity.Id, order, layer.OriginalText, layer.CurrentText));
+                order++;
+            }
+
+            foreach (var source in state.Sources)
+            {
+                entity.sources.Add(PracticeSource.Create(source.SourceId, entity.Id, source.PageId, source.Region));
+            }
+
+            foreach (var tagId in state.TagIds)
+            {
+                if (tagId != Guid.Empty && !entity.tagIds.Contains(tagId))
+                {
+                    entity.tagIds.Add(tagId);
+                }
+            }
+
+            return entity;
+        }
+
+        public PracticeState CreateState()
+        {
+            return new PracticeState
+            {
+                Id = Id,
+                AtlasId = AtlasId,
+                Name = Name,
+                Code = Code,
+                MainPartId = MainPartId,
+                Notes = Notes,
+                ReferenceNote = ReferenceNote,
+                IsVerified = IsVerified,
+                IsArchived = IsArchived,
+                CurrentRevision = CurrentRevision,
+                CreatedUtc = CreatedUtc,
+                UpdatedUtc = UpdatedUtc,
+                Layers = layers
+                    .OrderBy(l => l.Order)
+                    .Select(l => PracticeState.LayerState.Create(l.Id, l.OriginalText, l.CurrentText))
+                    .ToList(),
+                Sources = sources
+                    .Select(s => PracticeState.SourceState.Create(s.Id, s.PageId, s.Region))
+                    .ToList(),
+                TagIds = tagIds.ToList()
+            };
+        }
+
+        public sealed class PracticeState
+        {
+            public Guid Id { get; set; }
+
+            public Guid? AtlasId { get; set; }
+
+            public string Name { get; set; }
+
+            public string Code { get; set; }
+
+            public Guid MainPartId { get; set; }
+
+            public string Notes { get; set; }
+
+            public string ReferenceNote { get; set; }
+
+            public bool IsVerified { get; set; }
+
+            public bool IsArchived { get; set; }
+
+            public int CurrentRevision { get; set; }
+
+            public DateTime CreatedUtc { get; set; }
+
+            public DateTime UpdatedUtc { get; set; }
+
+            public List<LayerState> Layers { get; set; }
+
+            public List<SourceState> Sources { get; set; }
+
+            public List<Guid> TagIds { get; set; }
+
+            public sealed class LayerState
+            {
+                public Guid LayerId { get; set; }
+
+                public string OriginalText { get; set; }
+
+                public string CurrentText { get; set; }
+
+                public static LayerState Create(Guid layerId, string originalText, string currentText)
+                {
+                    return new LayerState
+                    {
+                        LayerId = layerId,
+                        OriginalText = originalText,
+                        CurrentText = currentText
+                    };
+                }
+            }
+
+            public sealed class SourceState
+            {
+                public Guid SourceId { get; set; }
+
+                public Guid PageId { get; set; }
+
+                public ValueObjects.PageRegion Region { get; set; }
+
+                public static SourceState Create(Guid sourceId, Guid pageId, ValueObjects.PageRegion region)
+                {
+                    return new SourceState
+                    {
+                        SourceId = sourceId,
+                        PageId = pageId,
+                        Region = region
+                    };
+                }
+            }
+        }
+
         public sealed class LayerInput
         {
             public LayerInput(string originalText, string currentText)
